@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flores Amarillas para Diana ❤️</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tone.js for soft romantic synth ambient background sound -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <style>
+        :root {
+            --yellow-glow: #facc15;
+            --pink-glow: #ec4899;
+            --bg-dark: #070510;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        .font-cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .font-romantic {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        /* Glassmorphism Romantic Card */
+        .glass-card {
+            background: rgba(18, 12, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(253, 224, 71, 0.25);
+            box-shadow: 0 0 35px rgba(236, 72, 153, 0.2), 0 0 15px rgba(250, 204, 21, 0.15);
+        }
+
+        .glass-card-glow {
+            animation: cardGlowPulse 4s infinite alternate ease-in-out;
+        }
+
+        @keyframes cardGlowPulse {
+            0% {
+                box-shadow: 0 0 25px rgba(236, 72, 153, 0.25), 0 0 15px rgba(250, 204, 21, 0.2);
+                border-color: rgba(250, 204, 21, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 45px rgba(236, 72, 153, 0.45), 0 0 30px rgba(250, 204, 21, 0.4);
+                border-color: rgba(244, 63, 94, 0.5);
+            }
+        }
+
+        /* Heart Balloons & Bubbles floating in background */
+        .bubble-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -60px;
+            animation: floatUp linear infinite;
+            filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.6));
+            opacity: 0.8;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* CSS Glowing Night Sky Flowers */
+        .flower-bed {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .flower {
+            position: absolute;
+            bottom: 0;
+            transform-origin: bottom center;
+            z-index: 10;
+        }
+
+        /* Stem animation */
+        .flower__stem {
+            width: 8px;
+            height: 0px;
+            background: linear-gradient(to top, #15803d, #22c55e, #86efac);
+            border-radius: 4px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+            animation: growStem 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes growStem {
+            to {
+                height: var(--stem-height, 280px);
+            }
+        }
+
+        /* Leaf styling */
+        .flower__leaf {
+            position: absolute;
+            width: 35px;
+            height: 20px;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border-radius: 0 100px 0 100px;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+            opacity: 0;
+            animation: unfoldLeaf 1s ease-out forwards;
+            animation-delay: var(--leaf-delay, 1.5s);
+        }
+
+        .flower__leaf--left {
+            left: -30px;
+            top: 50%;
+            transform: rotate(-25deg);
+        }
+
+        .flower__leaf--right {
+            right: -30px;
+            top: 35%;
+            transform: scaleX(-1) rotate(-25deg);
+        }
+
+        @keyframes unfoldLeaf {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Bloom Petal Group */
+        .flower__head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 130px;
+            height: 130px;
+            animation: bloom 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: var(--bloom-delay, 2s);
+        }
+
+        @keyframes bloom {
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Center disk of flower */
+        .flower__center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 42px;
+            height: 42px;
+            background: radial-gradient(circle, #78350f 0%, #b45309 60%, #451a03 100%);
+            border-radius: 50%;
+            z-index: 5;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.8), inset 0 0 8px rgba(0,0,0,0.5);
+            border: 2px solid #fef08a;
+        }
+
+        /* Yellow Petals Circle */
+        .flower__petals {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            animation: gentleSway 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes gentleSway {
+            0% { transform: rotate(-3deg); }
+            100% { transform: rotate(3deg); }
+        }
+
+        .petal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 28px;
+            height: 65px;
+            background: linear-gradient(to top, #ca8a04, #facc15, #fef08a);
+            border-radius: 50% 50% 10% 10%;
+            transform-origin: center bottom;
+            box-shadow: 0 0 12px rgba(250, 204, 21, 0.6);
+            border: 1px solid rgba(254, 240, 138, 0.5);
+        }
+
+        /* Light particles floating from flowers */
+        .flower__light {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #fef08a;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #facc15, 0 0 20px #facc15;
+            animation: floatLight 3s infinite ease-out;
+            opacity: 0;
+        }
+
+        @keyframes floatLight {
+            0% {
+                transform: translate(0, 0) scale(0.5);
+                opacity: 0;
+            }
+            30% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx, 20px), var(--dy, -80px)) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Sparkle burst on touch */
+        .sparkle-particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: sparkleOut 0.8s ease-out forwards;
+            z-index: 100;
+        }
+
+        @keyframes sparkleOut {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--sx), var(--sy)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Error Shake Animation */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Glowing text effects */
+        .glow-text-yellow {
+            text-shadow: 0 0 12px rgba(250, 204, 21, 0.8), 0 0 25px rgba(234, 179, 8, 0.5);
+        }
+
+        .glow-text-pink {
+            text-shadow: 0 0 12px rgba(244, 63, 94, 0.8), 0 0 25px rgba(236, 72, 153, 0.5);
+        }
+
+        /* Custom scrollbar for letter modal */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(250, 204, 21, 0.4);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center relative selection:bg-pink-500 selection:text-white">
+
+    <!-- Background Bubbles & Floating Hearts -->
+    <div id="bubble-container" class="bubble-container"></div>
+
+    <!-- Starry Sky Background canvas effect -->
+    <div class="fixed inset-0 bg-gradient-to-b from-[#05030a] via-[#0d0720] to-[#140a26] -z-10"></div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="w-full min-h-screen flex flex-col items-center justify-center p-4 z-10 relative">
+
+        <!-- ================= PANTALLA 1: VERIFICACIÓN DE NOMBRE ================= -->
+        <div id="screen-1" class="w-full max-w-md transition-all duration-700 ease-out transform scale-100 opacity-100">
+            <div class="glass-card glass-card-glow rounded-3xl p-8 sm:p-10 text-center relative overflow-hidden">
+                
+                <!-- Decorative top heart icon -->
+                <div class="mx-auto w-16 h-16 mb-4 rounded-full bg-gradient-to-tr from-pink-500/20 to-yellow-500/20 border border-yellow-400/40 flex items-center justify-center shadow-lg shadow-pink-500/20 animate-pulse">
+                    <svg class="w-8 h-8 text-yellow-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+
+                <h1 class="font-cursive text-4xl sm:text-5xl font-bold text-yellow-300 mb-2 glow-text-yellow">
+                    ¡Hola, hermosa! ✨
+                </h1>
+                <p class="text-pink-200/90 text-sm sm:text-base font-light mb-6 tracking-wide">
+                    Escribe tu nombre para verificar si este regalo es especialmente para ti ❤️
+                </p>
+
+                <form id="name-form" onsubmit="handleNameSubmit(event)" class="space-y-5">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="name-input" 
+                            placeholder="Escribe tu nombre aquí..."
+                            autocomplete="off"
+                            class="w-full px-5 py-3.5 bg-black/40 border-2 border-yellow-400/30 rounded-2xl text-yellow-100 placeholder-pink-300/40 focus:outline-none focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400/20 transition-all text-center text-lg font-medium shadow-inner"
+                        />
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full py-3.5 px-6 bg-gradient-to-r from-yellow-500 via-amber-400 to-pink-500 hover:from-yellow-400 hover:to-pink-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-base tracking-wider uppercase flex items-center justify-center gap-2 group"
+                    >
+                        <span>Confirmar</span>
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </button>
+                </form>
+
+                <!-- Error Toast Message -->
+                <div id="error-message" class="hidden mt-5 p-3.5 rounded-2xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-sm font-medium animate-fadeIn shadow-lg shadow-rose-950/50">
+                    <!-- Dynamic message injected via JS -->
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= PANTALLA 2: BOTÓN DE REGALO ================= -->
+        <div id="screen-2" class="hidden w-full max-w-md transition-all duration-700 ease-out transform scale-95 opacity-0">
+            <div class="glass-card glass-card-glow rounded-3xl p-8 sm:p-10 text-center relative flex flex-col items-center">
+                
+                <div class="relative mb-8">
+                    <div class="absolute -inset-4 rounded-full bg-gradient-to-r from-yellow-400 to-pink-500 opacity-50 blur-lg animate-pulse"></div>
+                    <div class="relative w-28 h-28 rounded-full bg-gradient-to-b from-yellow-300 to-amber-500 p-1 shadow-2xl flex items-center justify-center">
+                        <div class="w-full h-full rounded-full bg-slate-950 flex items-center justify-center">
+                            <span class="text-5xl animate-bounce">🎁</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="font-cursive text-3xl sm:text-4xl text-yellow-300 font-bold mb-3 glow-text-yellow">
+                    ¡Identidad Confirmada! 💖
+                </h2>
+                <p class="text-pink-100 text-sm mb-8 leading-relaxed">
+                    Edgar te ha preparado un detalle hecho con mucho cariño y corazón especialmente para ti en este día.
+                </p>
+
+                <!-- Botón exacto solicitado: "Abre el regalo de Edgar" -->
+                <button 
+                    onclick="openGift()"
+                    class="w-full py-4 px-8 bg-gradient-to-r from-yellow-400 via-amber-400 to-pink-500 hover:from-yellow-300 hover:to-pink-400 text-slate-950 font-extrabold rounded-2xl shadow-xl shadow-yellow-500/30 hover:shadow-pink-500/50 transform hover:scale-105 active:scale-95 transition-all duration-300 text-lg tracking-wide flex items-center justify-center gap-3 border-2 border-yellow-200/50 group"
+                >
+                    <svg class="w-6 h-6 text-slate-950 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span>Abre el regalo de Edgar</span>
+                </button>
+
+            </div>
+        </div>
+
+        <!-- ================= PANTALLA 3: MENSAJE ROMÁNTICO & FLORES AMARILLAS ================= -->
+        <div id="screen-3" class="hidden w-full h-full fixed inset-0 z-20 flex flex-col justify-between items-center transition-all duration-1000">
+
+            <!-- HUD Control Bar (Top Right) -->
+            <div class="absolute top-4 right-4 z-40 flex items-center gap-3">
+                <button 
+                    onclick="toggleMusic()" 
+                    id="music-btn"
+                    title="Música de fondo"
+                    class="p-3 bg-slate-900/80 border border-yellow-400/40 rounded-full text-yellow-300 hover:bg-yellow-500/20 hover:scale-110 transition-all shadow-lg backdrop-blur-md"
+                >
+                    <svg id="music-icon-off" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                    <svg id="music-icon-on" class="w-6 h-6 hidden text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                    </svg>
+                </button>
+
+                <button 
+                    onclick="showNoteModal()" 
+                    title="Leer nota de nuevo"
+                    class="p-3 bg-slate-900/80 border border-yellow-400/40 rounded-full text-yellow-300 hover:bg-yellow-500/20 hover:scale-110 transition-all shadow-lg backdrop-blur-md"
+                >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Header banner on flower view -->
+            <div class="pt-6 px-4 text-center z-30 pointer-events-none">
+                <h2 class="font-cursive text-4xl sm:text-6xl text-yellow-300 font-bold glow-text-yellow drop-shadow-lg">
+                    ¡Feliz Día de las Flores Amarillas! 🌻✨
+                </h2>
+                <p class="text-pink-200/90 text-sm sm:text-base font-light mt-1">
+                    Toca en cualquier parte de la pantalla para lanzar más corazones y brillo ❤️
+                </p>
+            </div>
+
+            <!-- Dynamic Animated Flower Bed Container -->
+            <div id="flower-bed" class="flower-bed">
+                <!-- Flowers will be injected dynamically via JS for perfect scale & timing -->
+            </div>
+
+        </div>
+
+        <!-- Romantic Letter Overlay Modal -->
+        <div id="note-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-500">
+            <div class="glass-card glass-card-glow w-full max-w-lg rounded-3xl p-6 sm:p-8 text-center relative border-2 border-yellow-400/40 shadow-2xl max-h-[90vh] flex flex-col justify-between custom-scrollbar overflow-y-auto transform transition-transform duration-500 scale-100">
+                
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-yellow-400 flex items-center justify-center shadow-lg border-2 border-white">
+                    <span class="text-2xl">💌</span>
+                </div>
+
+                <div class="pt-4 pb-2">
+                    <h3 class="font-cursive text-3xl sm:text-4xl text-pink-300 font-bold mb-4 glow-text-pink">
+                        De parte de Edgar...
+                    </h3>
+
+                    <div class="bg-black/30 border border-yellow-500/20 rounded-2xl p-5 text-left mb-6 relative">
+                        <svg class="w-8 h-8 text-yellow-400/20 absolute top-2 left-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                        </svg>
+                        
+                        <p class="font-cursive text-xl sm:text-2xl text-yellow-100 leading-relaxed pl-4 pt-2">
+                            "Lo siento no estuve afuera de tu edificio esperandote a la hora de la salida para entregartelas pero al menos te lo puedo demostrar de la manera que si puedo.
+                            <br><br>
+                            ¡Feliz día de las flores amarillas mi niña hermosa, mi dianita preciosa!"
+                        </p>
+                    </div>
+                </div>
+
+                <button 
+                    onclick="closeNoteAndShowFlowers()"
+                    class="w-full py-3.5 px-6 bg-gradient-to-r from-yellow-400 via-amber-400 to-pink-500 hover:from-yellow-300 hover:to-pink-400 text-slate-950 font-bold rounded-2xl shadow-xl shadow-yellow-500/30 transform hover:scale-102 active:scale-98 transition-all duration-200 text-base tracking-wide uppercase flex items-center justify-center gap-2"
+                >
+                    <span>Ver la sorpresita</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </button>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        /* ================= LISTA DE NOMBRES/APODOS VÁLIDOS ================= */
+        const VALID_NAMES = [
+            "diana laura acosta",
+            "diana",
+            "dianita",
+            "lau",
+            "laura",
+            "amorcito",
+            "mi princesa",
+            "hermosa"
+        ];
+
+        let synth = null;
+        let isMusicPlaying = false;
+        let noteLoop = null;
+
+        /* Normaliza la cadena quitando espacios extras y convirtiendo a minúsculas */
+        function normalizeString(str) {
+            return str
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, ""); // Remueve acentos para mayor flexibilidad
+        }
+
+        /* Manejador de Submit de la Pantalla 1 */
+        function handleNameSubmit(event) {
+            event.preventDefault();
+            const inputElem = document.getElementById('name-input');
+            const errorElem = document.getElementById('error-message');
+            const rawValue = inputElem.value;
+            const normalizedInput = normalizeString(rawValue);
+
+            if (!normalizedInput) {
+                showError("Por favor, escribe tu nombre o apodo ❤️");
+                return;
+            }
+
+            // Comprueba si coincide exactamente con alguna frase o apodo autorizado
+            const isValid = VALID_NAMES.some(valid => normalizeString(valid) === normalizedInput);
+
+            if (isValid) {
+                errorElem.classList.add('hidden');
+                transitionToScreen2();
+            } else {
+                showError("¡Ups! Este regalo es solo para mi niña hermosa. Intenta de nuevo ❤️");
+                triggerShake(document.getElementById('screen-1'));
+            }
+        }
+
+        function showError(msg) {
+            const errorElem = document.getElementById('error-message');
+            errorElem.innerText = msg;
+            errorElem.classList.remove('hidden');
+        }
+
+        function triggerShake(element) {
+            element.classList.remove('shake');
+            void element.offsetWidth; // Force reflow
+            element.classList.add('shake');
+        }
+
+        /* Transición suave a la Pantalla 2 */
+        function transitionToScreen2() {
+            const s1 = document.getElementById('screen-1');
+            const s2 = document.getElementById('screen-2');
+
+            s1.classList.remove('scale-100', 'opacity-100');
+            s1.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                s1.classList.add('hidden');
+                s2.classList.remove('hidden');
+                
+                // Trigger reflow for transition
+                setTimeout(() => {
+                    s2.classList.remove('scale-95', 'opacity-0');
+                    s2.classList.add('scale-100', 'opacity-100');
+                }, 50);
+            }, 600);
+        }
+
+        /* Abre el regalo desde la Pantalla 2 */
+        function openGift() {
+            const s2 = document.getElementById('screen-2');
+            const s3 = document.getElementById('screen-3');
+            const modal = document.getElementById('note-modal');
+
+            s2.classList.remove('scale-100', 'opacity-100');
+            s2.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                s2.classList.add('hidden');
+                s3.classList.remove('hidden');
+                modal.classList.remove('hidden');
+                
+                // Start background music tone automatically or setup audio
+                initToneAudio();
+            }, 600);
+        }
+
+        /* Cierra la nota modal y muestra la animación de flores */
+        function closeNoteAndShowFlowers() {
+            const modal = document.getElementById('note-modal');
+            modal.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('opacity-0', 'scale-95');
+                
+                // Generar y hacer crecer las flores
+                renderFlowers();
+                
+                // Lanzar ráfaga inicial de corazones
+                spawnBurstHearts();
+            }, 500);
+        }
+
+        function showNoteModal() {
+            const modal = document.getElementById('note-modal');
+            modal.classList.remove('hidden');
+        }
+
+        /* Genera las flores amarillas en CSS */
+        function renderFlowers() {
+            const flowerBed = document.getElementById('flower-bed');
+            flowerBed.innerHTML = ''; // Limpiar previo
+
+            // Configuración de varias flores con posiciones, alturas y escalas variables
+            const flowerSpecs = [
+                { left: '15%', height: '260px', scale: '0.85', bloomDelay: '1.2s', stemDelay: '0s' },
+                { left: '32%', height: '340px', scale: '1.1',  bloomDelay: '2.0s', stemDelay: '0.4s' },
+                { left: '50%', height: '380px', scale: '1.25', bloomDelay: '2.4s', stemDelay: '0.2s' },
+                { left: '68%', height: '330px', scale: '1.05', bloomDelay: '1.8s', stemDelay: '0.5s' },
+                { left: '85%', height: '270px', scale: '0.9',  bloomDelay: '1.5s', stemDelay: '0.3s' }
+            ];
+
+            flowerSpecs.forEach((spec, idx) => {
+                const flowerDiv = document.createElement('div');
+                flowerDiv.className = 'flower';
+                flowerDiv.style.left = spec.left;
+                flowerDiv.style.transform = `scale(${spec.scale})`;
+
+                // Stem
+                const stem = document.createElement('div');
+                stem.className = 'flower__stem';
+                stem.style.setProperty('--stem-height', spec.height);
+                stem.style.animationDelay = spec.stemDelay;
+
+                // Leaves
+                const leaf1 = document.createElement('div');
+                leaf1.className = 'flower__leaf flower__leaf--left';
+                leaf1.style.setProperty('--leaf-delay', `${parseFloat(spec.stemDelay) + 1.0}s`);
+
+                const leaf2 = document.createElement('div');
+                leaf2.className = 'flower__leaf flower__leaf--right';
+                leaf2.style.setProperty('--leaf-delay', `${parseFloat(spec.stemDelay) + 1.2}s`);
+
+                stem.appendChild(leaf1);
+                stem.appendChild(leaf2);
+
+                // Flower Head
+                const head = document.createElement('div');
+                head.className = 'flower__head';
+                head.style.setProperty('--bloom-delay', spec.bloomDelay);
+
+                // Petals Container
+                const petalsGroup = document.createElement('div');
+                petalsGroup.className = 'flower__petals';
+
+                // 14 pétalos distribuidos radialmente
+                const totalPetals = 14;
+                for (let p = 0; p < totalPetals; p++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    const angle = (360 / totalPetals) * p;
+                    petal.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
+                    petalsGroup.appendChild(petal);
+                }
+
+                // Flower Center Disc
+                const center = document.createElement('div');
+                center.className = 'flower__center';
+
+                head.appendChild(petalsGroup);
+                head.appendChild(center);
+
+                // Floating Lights around flower
+                for (let l = 0; l < 4; l++) {
+                    const light = document.createElement('div');
+                    light.className = 'flower__light';
+                    light.style.left = `${40 + (l * 12)}%`;
+                    light.style.top = `${30 + (l * 15)}%`;
+                    light.style.setProperty('--dx', `${(Math.random() - 0.5) * 60}px`);
+                    light.style.setProperty('--dy', `-${40 + Math.random() * 80}px`);
+                    light.style.animationDelay = `${parseFloat(spec.bloomDelay) + 0.5 + (l * 0.4)}s`;
+                    head.appendChild(light);
+                }
+
+                flowerDiv.appendChild(stem);
+                flowerDiv.appendChild(head);
+                flowerBed.appendChild(flowerDiv);
+            });
+        }
+
+        /* Animación de Burbujas / Globos de Corazón flotantes en el fondo */
+        function createFloatingHeart() {
+            const container = document.getElementById('bubble-container');
+            if (!container) return;
+
+            const heart = document.createElement('div');
+            heart.className = 'bubble';
+            
+            // Random attributes
+            const size = Math.floor(Math.random() * 24) + 16; // 16px to 40px
+            const left = Math.random() * 100; // 0% to 100%
+            const duration = Math.random() * 6 + 6; // 6s to 12s
+            const isYellow = Math.random() > 0.4; // Mezpcla de corazones amarillos y rosas
+
+            heart.style.left = `${left}%`;
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.animationDuration = `${duration}s`;
+
+            const colorClass = isYellow ? 'text-yellow-400' : 'text-pink-400';
+
+            heart.innerHTML = `
+                <svg class="w-full h-full ${colorClass}" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            `;
+
+            container.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        // Crear corazones flotantes de manera continua
+        setInterval(createFloatingHeart, 450);
+
+        function spawnBurstHearts() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(createFloatingHeart, i * 100);
+            }
+        }
+
+        /* Interacción al hacer clic/tocar en la pantalla */
+        document.addEventListener('click', (e) => {
+            // Evita crear chispa si se hizo clic en un botón o input
+            if (e.target.closest('button') || e.target.closest('input')) return;
+
+            createSparkleBurst(e.clientX, e.clientY);
+        });
+
+        function createSparkleBurst(x, y) {
+            const particleCount = 12;
+            const colors = ['#facc15', '#fef08a', '#ec4899', '#f43f5e'];
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'sparkle-particle';
+                
+                const angle = (Math.PI * 2 / particleCount) * i;
+                const distance = Math.random() * 60 + 30;
+                const sx = `${Math.cos(angle) * distance}px`;
+                const sy = `${Math.sin(angle) * distance}px`;
+                const size = Math.random() * 8 + 6;
+
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 10px ${particle.style.backgroundColor}`;
+                particle.style.setProperty('--sx', sx);
+                particle.style.setProperty('--sy', sy);
+
+                document.body.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, 800);
+            }
+        }
+
+        /* Configuración de Música Romántica Suave con Tone.js */
+        function initToneAudio() {
+            if (synth) return;
+
+            try {
+                // Synth romántico y dulce
+                synth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "triangle" },
+                    envelope: {
+                        attack: 0.2,
+                        decay: 0.5,
+                        sustain: 0.4,
+                        release: 1.5
+                    }
+                }).toDestination();
+
+                synth.volume.value = -12; // Volumen suave
+
+                // Acordes y melodía dulce tipo cajita de música romántica
+                const melodyNotes = [
+                    { time: "0:0", note: ["C4", "E4", "G4"] },
+                    { time: "0:2", note: ["E4", "G4", "B4"] },
+                    { time: "1:0", note: ["F4", "A4", "C5"] },
+                    { time: "1:2", note: ["G4", "B4", "D5"] },
+                    { time: "2:0", note: ["A4", "C5", "E5"] },
+                    { time: "2:2", note: ["F4", "A4", "C5"] },
+                    { time: "3:0", note: ["G4", "B4", "D5"] }
+                ];
+
+                noteLoop = new Tone.Part((time, value) => {
+                    synth.triggerAttackRelease(value.note, "8n", time);
+                }, melodyNotes);
+
+                noteLoop.loop = true;
+                noteLoop.loopEnd = "4m";
+            } catch (err) {
+                console.log("Audio autostart context pending user interaction");
+            }
+        }
+
+        async function toggleMusic() {
+            if (!synth) initToneAudio();
+
+            await Tone.start();
+
+            const iconOff = document.getElementById('music-icon-off');
+            const iconOn = document.getElementById('music-icon-on');
+            const btn = document.getElementById('music-btn');
+
+            if (isMusicPlaying) {
+                Tone.Transport.stop();
+                if (noteLoop) noteLoop.stop();
+                isMusicPlaying = false;
+                iconOff.classList.remove('hidden');
+                iconOn.classList.add('hidden');
+                btn.classList.remove('border-pink-500', 'bg-pink-500/20');
+            } else {
+                if (noteLoop) noteLoop.start(0);
+                Tone.Transport.start();
+                isMusicPlaying = true;
+                iconOff.classList.add('hidden');
+                iconOn.classList.remove('hidden');
+                btn.classList.add('border-pink-500', 'bg-pink-500/20');
+            }
+        }
+    </script>
+</body>
+</html>
